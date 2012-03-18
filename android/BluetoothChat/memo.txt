@@ -1,0 +1,34 @@
+[[ BluetoothChat ]]
+
+	onCreate()
+		端末が Bluetooth を搭載しているかの確認（getDefaultAdapter()）
+
+	onStart()
+		Bluetooth が無効になっている場合は有効にするリクエストを行い、
+		その後 setupChat() を実行する。
+		有効になっている場合はすぐに setupChat() を実行する。
+
+	onResume()
+		State を STATE_LISTEN に変更し、スレッド "AcceptThread" を起床する。
+
+
+	onPause()
+		何もしない
+
+	onStop()
+		何もしない
+
+	onDestroy()
+		BluetoothChatService.stop() を実行する
+		 ->	全てのスレッドを停止する
+
+
+[[ BluetoothChatService ]]
+
+	connect()
+		オプションメニューから実行される
+
+
+[[ DeviceListActivity ]]
+
+	doDiscovery()
