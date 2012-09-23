@@ -7,6 +7,8 @@
 #include	<stdlib.h>
 #include	<string.h>
 
+#include	"local_rules.h"
+
 #define	SOCKET_PATH		"/tmp/sockis"
 #define	LISTEN_BACKLOG	1
 
@@ -30,8 +32,7 @@ void	setSignalHandler(void)
 	if(	sigaction(	SIGINT,
 					&act,
 					NULL) < 0) {		/* oldact */
-		perror("sigaction");
-		exit(1);
+		errexit(__func__, __LINE__);
 	}
 }
 
@@ -47,8 +48,7 @@ int		main(void)
 					SOCK_STREAM,
 					0);				/* protocol */
 	if(	sfd < 0) {
-		perror("socket");
-		exit(1);
+		errexit(__func__, __LINE__);
 	}
 
 	memset(	&sun,
@@ -62,16 +62,14 @@ int		main(void)
 	if(	bind(	sfd,
 				(struct sockaddr*)&sun,
 				sizeof(sun)) < 0) {
-		perror("bind");
-		exit(1);
+		errexit(__func__, __LINE__);
 	}
 
 	setSignalHandler();			/* if SIGINT then unlink(SOCKET_PATH) */
 
 	if(	listen(	sfd,
 				LISTEN_BACKLOG) < 0) {
-		perror("listen");
-		exit(1);
+		errexit(__func__, __LINE__);
 	}
 
 	printf("accept() then waiting...\n");
@@ -80,8 +78,7 @@ int		main(void)
 					(struct sockaddr*)&sun,
 					&sunlen);
 	if(	cfd < 0) {
-		perror("accept");
-		exit(1);
+		errexit(__func__, __LINE__);
 	}
 	printf("accept() ok.\n");
 

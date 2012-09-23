@@ -6,6 +6,8 @@
 #include	<stdlib.h>
 #include	<string.h>
 
+#include	"local_rules.h"
+
 #define	SOCKET_PATH		"/tmp/sockis"
 
 
@@ -19,8 +21,7 @@ int		main(void)
 					SOCK_STREAM,
 					0);				/* protocol */
 	if(	sfd < 0) {
-		perror("socket");
-		exit(1);
+		errexit(__func__, __LINE__);
 	}
 
 	memset(	&sun,
@@ -34,8 +35,7 @@ int		main(void)
 	if(	connect(	sfd,
 					(struct sockaddr*)&sun,
 					(socklen_t)sizeof(sun)) < 0) {
-		perror("connect");
-		exit(1);
+		errexit(__func__, __LINE__);
 	}
 	printf("connect() ok.\n");
 
