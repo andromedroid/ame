@@ -1,12 +1,13 @@
 /**
  *	@file
- *	@brief		unix server side with select()
+ *	@brief		unix server side with epoll
  */
 
 #include	<unistd.h>
 #include	<signal.h>
 #include	<sys/socket.h>
 #include	<sys/un.h>
+#include	<sys/epoll.h>
 
 #include	<stdio.h>
 #include	<stdlib.h>
@@ -16,6 +17,7 @@
 
 #define	SOCKET_PATH		"/tmp/sockis"
 #define	LISTEN_BACKLOG	1
+#define	MAX_EVENT_NUM	1
 
 
 static	inline	int		max(int a, int b)
@@ -50,12 +52,15 @@ int		main(void)
 {
 	int					sfd,
 						cfd,
-						maxfd	= 0;
-	fd_set				rfds;
-	int					fdnum;
+						epfd,
+						nfds;
+	struct	epoll_event	ctlevt,
+						events[MAX_EVENT_NUM],
+						*p_evts;
 	struct	sockaddr_un	sun;
 	socklen_t			sunlen;
 	char				str[10];
+	int					ii;
 
 	sfd	= socket(	AF_UNIX,
 					SOCK_STREAM,
@@ -85,37 +90,42 @@ int		main(void)
 		errexit(__func__, __LINE__);
 	}
 
-	FD_ZERO(&rfds);
-	FD_SET(sfd, &rfds);			/* register fd to fd_set */
-	maxfd	= max(maxfd, sfd);
-
-	printf("select() then waiting...\n");
-	fdnum	= select(	maxfd + 1,
-						&rfds,
-						NULL,
-						NULL,
-						NULL);	/* timeout: unlimited */
-
-	if(fdnum < 0) {
+	epfd	= epoll_create1(0);
+	if(epfd < 0) {
 		errexit(__func__, __LINE__);
 	}
-	else if(fdnum == 0) {
-		printf("select() timeout.\n");
+
+	ctlevt.events	= EPOLLIN;
+	ctlevt.data.fd	= sfd;
+
+	if(	epoll_ctl(	epfd,
+					EPOLL_CTL_ADD,
+					sfd,
+					&ctlevt) < 0) {
 		errexit(__func__, __LINE__);
 	}
-	else {
-		;	/* succeed */
-	}
 
-	if(FD_ISSET(sfd, &rfds)) {
-		sunlen	= sizeof(sun);
-		cfd	= accept(	sfd,
-						(struct sockaddr*)&sun,
-						&sunlen);
-		if(	cfd < 0) {
-			errexit(__func__, __LINE__);
+	printf("epoll_wait() then waiting...\n");
+	nfds	= epoll_wait(	epfd,
+							events,
+							MAX_EVENT_NUM,
+							-1);			/* timeout: unlimited*/
+
+	for(ii = 0;
+		ii < nfds;
+		ii++) {
+		p_evts	= &events[ii];
+
+		if(p_evts->data.fd == sfd) {
+			sunlen	= sizeof(sun);
+			cfd	= accept(	sfd,
+							(struct sockaddr*)&sun,
+							&sunlen);
+			if(	cfd < 0) {
+				errexit(__func__, __LINE__);
+			}
+			printf("accept() ok.\n");
 		}
-		printf("accept() ok.\n");
 	}
 
 	read(	cfd,

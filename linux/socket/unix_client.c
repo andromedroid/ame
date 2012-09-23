@@ -1,3 +1,8 @@
+/**
+ *	@file
+ *	@brief		unix client side
+ */
+
 #include	<unistd.h>
 #include	<sys/socket.h>
 #include	<sys/un.h>
