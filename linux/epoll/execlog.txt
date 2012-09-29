@@ -1,0 +1,45 @@
+$ ./sel &
+
+select() then waiting...
+
+
+$ ./cl1
+
+event occured !
+sfd1 !
+[s] accept() ok.
+[c] connect() ok.
+[c] write
+
+event occured !
+cfd1 R !
+[s] abcde
+
+event occured !
+cfd1 W !
+[c] read
+[c] HELLO
+[c] closing...
+[c] bye
+
+
+$ ./cl2
+
+event occured !
+sfd2 !
+[s] accept() ok.
+[c] connect() ok.
+[c] write
+
+event occured !
+cfd2 R !
+[s] hijkl
+
+event occured !
+cfd2 W !
+[s] bye
+[c] read
+[c] WORLD
+[c] closing...
+[c] bye
+[1]+  終了                  ./sel

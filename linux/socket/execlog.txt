@@ -1,0 +1,9 @@
+accept() then waiting...
+
+accept() ok.
+connect() ok.
+[s] abcde
+[s] bye
+[c] HELLO
+[c] bye
+[1]+  終了                  ./sv
