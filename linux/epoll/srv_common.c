@@ -30,16 +30,14 @@
 
 #define	UNIX_SOCK_ACCEPT(sfd, cfd)						\
 {														\
-	if(FD_ISSET(sfd, &rfds)) {							\
-		sunlen	= sizeof(sun);							\
-		cfd	= accept(	sfd,							\
-						(struct sockaddr*)&sun,			\
-						&sunlen);						\
-		if(	cfd < 0) {									\
-			errexit(__func__, __LINE__);				\
-		}												\
-		printf("[s] accept() ok.\n");					\
+	sunlen	= sizeof(sun);								\
+	cfd	= accept(	sfd,								\
+					(struct sockaddr*)&sun,				\
+					&sunlen);							\
+	if(	cfd < 0) {										\
+		errexit(__func__, __LINE__);					\
 	}													\
+	printf("[s] accept() ok.\n");						\
 }
 
 void	sigIntHandler(int i_Arg)
