@@ -13,14 +13,12 @@
 
 #include	"local_rules.h"
 
-#define	SOCKET_PATH		"/tmp/sockis"
-
 
 int		main(void)
 {
 	int					sfd;
 	struct	sockaddr_un	sun;
-	char				str[10]	= {'A', 'B', 'C', 'D', 'E', '\0'};
+	char				str[STR_LENGTH]	= {'a', 'b', 'c', 'd', 'e', '\0'};
 
 	sfd	= socket(	AF_UNIX,
 					SOCK_STREAM,
@@ -46,9 +44,16 @@ int		main(void)
 
 	write(	sfd,
 			str,
-			6);
+			sizeof(str));
+
+	read(	sfd,
+			str,
+			sizeof(str));
+	printf("[c] %s\n", str);
 
 	close(sfd);
+
+	printf("[c] bye\n");
 
 	return	0;
 }

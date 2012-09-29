@@ -15,38 +15,10 @@
 
 #include	"local_rules.h"
 
-#define	SOCKET_PATH		"/tmp/sockis"
-#define	LISTEN_BACKLOG	1
 #define	MAX_EVENT_NUM	1
 
+#include	"unix_srv_common.c"
 
-static	inline	int		max(int a, int b)
-{
-	return	(a >= b) ? a : b;
-}
-
-void	sigIntHandler(int i_Arg)
-{
-	printf("\nuser canceled. -> exit();\n");
-	unlink(SOCKET_PATH);
-	exit(0);
-}
-
-void	setSignalHandler(void)
-{
-	struct	sigaction	act;
-
-	memset(	&act,
-			0,
-			sizeof(act));
-	act.sa_handler	= sigIntHandler;
-
-	if(	sigaction(	SIGINT,
-					&act,
-					NULL) < 0) {		/* oldact */
-		errexit(__func__, __LINE__);
-	}
-}
 
 int		main(void)
 {
@@ -59,7 +31,7 @@ int		main(void)
 						*p_evts;
 	struct	sockaddr_un	sun;
 	socklen_t			sunlen;
-	char				str[10];
+	char				str[STR_LENGTH];
 	int					ii;
 
 	sfd	= socket(	AF_UNIX,
@@ -131,12 +103,22 @@ int		main(void)
 	read(	cfd,
 			str,
 			sizeof(str));
-	printf("%s\n", str);
+	printf("[s] %s\n", str);
+
+	strncpy(	str,
+				"HELLO",
+				sizeof(str) - 1);
+
+	write(	cfd,
+			str,
+			sizeof(str));
 
 	close(sfd);
 	close(cfd);
 
 	unlink(SOCKET_PATH);
+
+	printf("[s] bye\n");
 
 	return	0;
 }
