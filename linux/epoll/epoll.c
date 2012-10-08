@@ -96,6 +96,7 @@ int		main(void)
 
 				MY_EPOLL_CTL(sfd1, EPOLL_CTL_DEL, EPOLLIN);
 				close(sfd1);
+				sfd1	= 0;
 
 				MY_EPOLL_CTL(cfd1, EPOLL_CTL_ADD, EPOLLIN);
 			}
@@ -107,6 +108,7 @@ int		main(void)
 
 				MY_EPOLL_CTL(sfd2, EPOLL_CTL_DEL, EPOLLIN);
 				close(sfd2);
+				sfd2	= 0;
 
 				MY_EPOLL_CTL(cfd2, EPOLL_CTL_ADD, EPOLLIN);
 			}
@@ -135,6 +137,7 @@ int		main(void)
 							sizeof(str));
 
 					close(cfd1);
+					cfd1	= 0;
 				}
 			}
 
@@ -162,6 +165,7 @@ int		main(void)
 							sizeof(str));
 
 					close(cfd2);
+					cfd2	= 0;
 				}
 			}
 		}
