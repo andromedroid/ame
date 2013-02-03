@@ -1,3 +1,7 @@
+/**
+ *	@brief		usage of C pointer variable on inline arm gnu asm.
+ */
+
 #include <stdio.h>
 
 typedef	signed char		s8;
@@ -9,6 +13,9 @@ typedef	unsigned long	u32;
 typedef	unsigned int	uint;
 
 
+/**
+ *	@brief
+ */
 int		main(void)
 {
 	uint	var		= 0;
