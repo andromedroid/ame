@@ -39,6 +39,23 @@ int		main(void)
 			var);
 
 	/*
+	 *	using C pointer variable on inline assembly.
+	 */
+	asm (
+		"ldr	a1, %[a];"
+		"add	a1, a1, #4;"
+		"str	a1, %[a]"
+//		: [a] "=g" (*adr)					/* it become NG when assemble. refer sum1.c */
+		: [a] "=m" (*adr)
+		:
+		: "a1"
+		);
+
+	printf(	"adr : 0x%08X : %u\n",
+			(uint)adr,
+			*adr);
+
+	/*
 	 *	using C address (pointer) on inline assembly.
 	 *	(this is wrong usage)
 	 *
