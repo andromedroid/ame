@@ -1,0 +1,13 @@
+#include	<iostream>
+
+using namespace	std;
+
+
+int	main(void)
+{
+//	cout << "hello";
+	cout << "hello" << endl;
+
+	return	0;
+}
+
