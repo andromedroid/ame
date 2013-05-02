@@ -1,12 +1,18 @@
+/**
+ *	@file
+ *	@brief	Hello World on C++.
+ *	@note
+ *		-	$ g++ hello.cpp && ./a.out
+ */
+
 #include	<iostream>
 
 using namespace	std;
 
 
-int	main(void)
+int		main(void)
 {
-//	cout << "hello";
-	cout << "hello" << endl;
+	cout << "Hello, World." << endl;
 
 	return	0;
 }
