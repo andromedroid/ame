@@ -1,0 +1,125 @@
+[[ greeting ]]
+
+UNIX V6 reading #03
+http://atnd.org/events/41237
+
+ucc
+
+
+[[ swappiing ]]
+
+  - text seg
+  - data seg
+
+- rp
+	process counter
+
+- proc
+	044p
+- text
+	136p
+- user
+	046p
+
+- xp : text pointer
+- rp : buffer pointer
+
+
+[[ interrupt (~ 5.3) ]]
+
+  - bis : bit set (or)
+  - bic : bit clr ~r0 & r1
+
+- int prior
+	2 and 3 are not exist.
+	 -> because they are unused ?
+		not defined.
+	4 and 5 are same priority.
+
+- tst r1
+- jsr reg,dst
+	tmp = dst
+	-(sp) = reg
+	reg = PC
+	PC = tmp
+
+	sp : stack pointer
+
+	but when "pc", it is different act.
+
+- mfpi sp
+ 	address area
+- mtpi sp
+ 	address area
+
+- call()
+	interrupted psw
+	interrupt pc
+
+- PS, PSW
+	PSW : Processor Status Word
+	PS  : address of PSW
+
+- -4(sp)
+	it put 4 byte previous of sp. 
+	 -> chart 5.10
+
+- jsr r0, call; _clock
+	 - ; : it means "kaigyou"
+
+- rtt
+	back to PC & regs
+
+- cmp (sp)+, (sp)+
+	-> it just do foward to pointer indication addr.
+
+- duplicate label (1, 2)
+	jump
+		1f : search label 1 foward
+		1b : search label 1 backword
+
+- tst nofault
+  bne 1f
+	1: nofault exist
+	0: not exist
+
+- tst -(sp)
+	-> back to up stack pointer indication
+
+- jump src of trap and call
+	call : jsr from low.s
+	trap : interrupt vector
+
+- when link, "trap" of c-lang is renamed "_trap".
+
+- time, d, tout
+	tout resource is only one.
+	(common use by each proc)
+	so when most early process wakeup,
+	other all process are wakedup too.
+	and resleep.
+	tout is set next d.
+
+
+[[ interrupt (5.4 ~) ]]
+
+- u.u_prof
+	profiling
+	store executing PC to its array[4].
+
+- P.169
+	l.68 - 77
+		for nice changing ?
+		it isn't needed l.72 - 74 ?
+	l.84 - 88
+		current cpu process.
+		it need to setpri() bcz p_cpu incremented.
+
+
+[[ question ]]
+
+- simh
+   -> a few experience
+
+- spl (set priority level)
+	-> set interrupt level
