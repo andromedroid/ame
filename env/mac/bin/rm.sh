@@ -1,0 +1,1 @@
+../../ubuntu/bin/rm.sh

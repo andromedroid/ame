@@ -13,7 +13,7 @@ fi
 
 for PARAM in $@
 do
-	echo $PARAM
+#	echo $PARAM
 #	if [[ "$PARAM" == "/" -o "$PARAM" == "$HOME" ]]
 	if [ "$PARAM" == "/" -o "$PARAM" == "$HOME" ]
 	then
