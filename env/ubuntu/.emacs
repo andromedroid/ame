@@ -23,7 +23,7 @@
 ;; (setq visible-bell t)							;; 警告音を消す
 (delete-selection-mode t)						;; 選択領域を一括削除
 ;; (setq kill-whole-line t)							;; カーソルが行頭にある場合も行全体を削除
-(setq scroll-step 10)							;; 画面スクロールを n ライン毎にする
+(setq scroll-step 5)							;; 画面スクロールを n ライン毎にする
 ;; (when (boundp 'show-trailing-whitespace)
 ;; (setq-default show-trailing-whitespace t))		;; 行末のスペースを強調表示
 (global-set-key "\C-xp" (lambda () (interactive) (other-window -1)))	;; C-x p で C-x o の逆
@@ -54,7 +54,7 @@
 ;;=======================================================================
 ;; 最近使ったファイル
 ;;=======================================================================
-(recentf-mode)
+;;(recentf-mode)
 ;;
 ;;=======================================================================
 ;; リージョンに色を付ける
@@ -135,16 +135,16 @@
 ;; Evernote-mode setting
 ;;=======================================================================
 ;;(add-to-list 'load-path "<your load path>")	; already added to "site-lisp"
-(require 'evernote-mode)
+;;(require 'evernote-mode)
 ;;(setq evernote-username "<your evernote user name>")							; optional
 ;;(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))	; optional
-(global-set-key "\C-cec" 'evernote-create-note)
-(global-set-key "\C-ceo" 'evernote-open-note)
-(global-set-key "\C-ces" 'evernote-search-notes)
-(global-set-key "\C-ceS" 'evernote-do-saved-search)
-(global-set-key "\C-cew" 'evernote-write-note)
-(global-set-key "\C-cep" 'evernote-post-region)
-(global-set-key "\C-ceb" 'evernote-browser)
+;;(global-set-key "\C-cec" 'evernote-create-note)
+;;(global-set-key "\C-ceo" 'evernote-open-note)
+;;(global-set-key "\C-ces" 'evernote-search-notes)
+;;(global-set-key "\C-ceS" 'evernote-do-saved-search)
+;;(global-set-key "\C-cew" 'evernote-write-note)
+;;(global-set-key "\C-cep" 'evernote-post-region)
+;;(global-set-key "\C-ceb" 'evernote-browser)
 
 ;;
 ;;=======================================================================
