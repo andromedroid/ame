@@ -1,3 +1,5 @@
+;; HELP: C-h k [keybind to refer help]
+
 ;;=======================================================================
 ;; Misc
 ;;=======================================================================
@@ -22,6 +24,7 @@
 ;; (global-whitespace-mode)						;; スペースの可視化
 ;; (setq visible-bell t)							;; 警告音を消す
 (delete-selection-mode t)						;; 選択領域を一括削除
+(electric-indent-mode 0)						;; Enter: normal newline, C-j: newline & indent
 ;; (setq kill-whole-line t)							;; カーソルが行頭にある場合も行全体を削除
 (setq scroll-step 5)							;; 画面スクロールを n ライン毎にする
 ;; (when (boundp 'show-trailing-whitespace)
@@ -76,21 +79,21 @@
 ;;=======================================================================
 ;; http://www.namazu.org/~tsuchiya/elisp/#chmod
 ;; を参照
-(defun make-file-executable ()
-  "Make the file of this buffer executable, when it is a script source."
-  (save-restriction
-    (widen)
-    (if (string= "#!"
-		 (buffer-substring-no-properties 1
-						 (min 3 (point-max))))
-        (let ((name (buffer-file-name)))
-          (or (equal ?. (string-to-char
-			 (file-name-nondirectory name)))
-              (let ((mode (file-modes name)))
-                (set-file-modes name (logior mode (logand
-						   (/ mode 4) 73)))
-                (message (concat "Wrote " name " (+x)"))))))))
-(add-hook 'after-save-hook 'make-file-executable)
+;;(defun make-file-executable ()
+;;  "Make the file of this buffer executable, when it is a script source."
+;;  (save-restriction
+;;	(widen)
+;;	(if (string= "#!"
+;;		 (buffer-substring-no-properties 1
+;;						 (min 3 (point-max))))
+;;		(let ((name (buffer-file-name)))
+;;		  (or (equal ?. (string-to-char
+;;			 (file-name-nondirectory name)))
+;;			  (let ((mode (file-modes name)))
+;;				(set-file-modes name (logior mode (logand
+;;						   (/ mode 4) 73)))
+;;				(message (concat "Wrote " name " (+x)"))))))))
+;;(add-hook 'after-save-hook 'make-file-executable)
 
 ;;
 ;;=======================================================================
@@ -132,6 +135,23 @@
 
 ;;
 ;;=======================================================================
+;; Python-mode setting
+;;=======================================================================
+(add-hook 'python-mode-hook
+          '(lambda ()
+			 (setq indent-tabs-mode t)
+             (setq python-indent 4)
+             (setq tab-width 4)))
+
+;;
+;;=======================================================================
+;; Ruby-mode setting
+;;=======================================================================
+;;(setq ruby-indent-level 2)						;; default setting
+(setq ruby-indent-tabs-mode t)
+
+;;
+;;=======================================================================
 ;; Evernote-mode setting
 ;;=======================================================================
 ;;(add-to-list 'load-path "<your load path>")	; already added to "site-lisp"
@@ -145,13 +165,6 @@
 ;;(global-set-key "\C-cew" 'evernote-write-note)
 ;;(global-set-key "\C-cep" 'evernote-post-region)
 ;;(global-set-key "\C-ceb" 'evernote-browser)
-
-;;
-;;=======================================================================
-;; Ruby-mode setting
-;;=======================================================================
-;;(setq ruby-indent-level 2)						;; default setting
-(setq ruby-indent-tabs-mode t)
 
 ;;
 ;;=======================================================================
