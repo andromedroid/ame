@@ -41,15 +41,23 @@ if __name__ == "__main__" :
 #	MyClass.cmshow()
 #	print
 
-	mc.imset("imset")
-#	MyClass.cmset("cmset")
+#	mc.imset("imset")		# it apply only instance.
+	MyClass.cmset("cmset")	# it apply instance/class both.
+							# (only never assign any values to variable of instance.
 
 	mc.imshow()
 	MyClass.cmshow()
 	print
 
-#	mc.imset("imset")
-	MyClass.cmset("cmset")
+	mc.imset(None)
+	MyClass.cmset(None)
+
+	mc.imshow()				# None
+	MyClass.cmshow()		# None
+	print
+
+#	mc.imset("imset")		# it apply only instance.
+	MyClass.cmset("cmset")	# it apply only class.
 
 	mc.imshow()
 	MyClass.cmshow()
