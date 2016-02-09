@@ -1,4 +1,5 @@
-# essentials
+
+* essentials
 
 	~~~
 sudo pacman -S git
@@ -9,14 +10,14 @@ sudo pacman -S netsurf
 sudo pacman -S emacs
 ~~~
 
-# video driver
+* video driver
 
 	~~~
 sudo pacman -S xf86-video-vesa
 sudo pacman -S xf86-video-s3
 ~~~
 
-# X
+* X
 
 	~~~
 sudo pacman -S xorg-server
@@ -25,7 +26,7 @@ sudo pacman -S xfce4
 echo "exec startxfce4" > ~/.xinitrc
 ~~~
 
-# python
+* python
 
 	~~~
 sudo pacman -S python2
