@@ -33,6 +33,14 @@ sudo pacman -S xfce4
 echo "exec startxfce4" > ~/.xinitrc
 ~~~
 
+* netsurf setting
+
+	~~~
+cd .config/netsurf/
+ln -s /tmp/Cookies
+ln -s /tmp/URLs
+~~~
+
 * python
 
 	~~~
