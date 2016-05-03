@@ -17,6 +17,13 @@ sudo pacman -S xf86-video-vesa
 sudo pacman -S xf86-video-s3
 ~~~
 
+* ALPS touchpad setting
+
+	~~~
+sudo pacman -S xf86-input-synaptics
+sudo cp -a /usr/share/X11/xorg.conf.d/50-synaptics.conf /etc/X11/xorg.conf.d/
+~~~
+
 * X
 
 	~~~
