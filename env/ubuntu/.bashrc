@@ -16,8 +16,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=10000
-HISTFILESIZE=20000
+HISTSIZE=100000
+HISTFILESIZE=200000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -57,10 +57,11 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+#	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;34m\]\W\[\033[00m\]\$ '
 else
 #	PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-	PS1='${debian_chroot:+($debian_chroot)}\w\$ '
+	PS1='${debian_chroot:+($debian_chroot)}\W\$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -90,6 +91,7 @@ alias ll='ls -lhF'
 alias la='ls -AF'
 alias lla='ls -AlhF'
 alias lo='ls -AlF'
+alias less='less -x4'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #	sleep 10; alert
