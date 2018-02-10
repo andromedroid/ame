@@ -36,6 +36,8 @@
 ;; (iswitchb-mode 1)								;; C-x b バッファ切替 C-s 順送り C-r 逆送り
 (global-set-key [M-right]	'next-buffer)		;; Alt + -> キーで次のバッファに移動
 (global-set-key [M-left]	'previous-buffer)	;; Alt + <- キーで前のバッファに移動
+(global-set-key	"\C-ci"		'indent-region)
+(global-set-key	"\C-ca"		'align)
 ;;
 ;;=======================================================================
 ;; 文字色の変更

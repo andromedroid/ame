@@ -121,6 +121,7 @@ fi
 # user customize :)
 alias emn='emacs -nw'
 
+# android
 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
 export PATH=$PATH:${JAVA_HOME}/bin
 export ANDROID_JAVA_HOME=${JAVA_HOME}
@@ -130,3 +131,11 @@ export ANDROID_HOME=${HOME}/android/sdk
 export PATH=$PATH:$ANDROID_STUDIO/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 
 export PATH=$PATH:${HOME}/android/ndk
+
+# python virtualenv
+VENVWRAP='/usr/share/virtualenvwrapper/virtualenvwrapper.sh'
+if [ -f ${VENVWRAP} ]
+then
+	export WORKON_HOME=${HOME}/workspace/.virtualenvs
+	source ${VENVWRAP}
+fi
