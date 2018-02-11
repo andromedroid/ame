@@ -20,15 +20,15 @@ import radio
 class Motor :
 
 	# command
-	LEFT		 = 0x21
-	RIGHT		 = 0x20
-	LEFT_INVERT	 = 0x13
-	RIGHT_INVERT = 0x12
-	ENABLE		 = 0x70
+	LEFT		= 0x21
+	RIGHT		= 0x20
+	LEFT_INVERT	= 0x13
+	RIGHT_INVERT	= 0x12
+	ENABLE		= 0x70
 
 	# direction
-	FORWARD = 0x80
-	REVERSE = 0x00
+	FORWARD	= 0x80
+	REVERSE	= 0x00
 
 	# i2c
 	_I2C_ADDR = 0x59
@@ -68,19 +68,19 @@ class Motor :
 
 
 motor_left	= Motor(Motor.LEFT)
-motor_right = Motor(Motor.RIGHT)
+motor_right	= Motor(Motor.RIGHT)
 
 
-def	hdr_ba( spd) :
+def	hdr_ba( spd, lb) :
 
 	dp.show( Image.HAPPY)
 
 	if ena is False :
 		Motor.enable()
 
-	motor_left.set_speed( spd)
+	motor_left.set_speed( spd + lb)
 	motor_right.set_speed( spd)
-	sleep( 500)
+	sleep( 200)
 
 #	Motor.disable()
 
@@ -94,8 +94,9 @@ def	hdr_bb( spd) :
 		Motor.enable()
 
 	motor_left.set_speed( spd, Motor.REVERSE)
-	motor_right.set_speed( spd, Motor.REVERSE)
-	sleep( 500)
+#	motor_right.set_speed( spd, Motor.REVERSE)
+	motor_right.set_speed( spd)
+	sleep( 200)
 
 #	Motor.disable()
 
@@ -111,6 +112,7 @@ def	loop( ena) :
 
 	if ena is True :
 		Motor.disable()
+		dp.clear()
 
 	return	False
 
@@ -119,8 +121,9 @@ if __name__ == "__main__" :
 
 	init()
 
-	spd	= 50
-	ena	= False
+	spd		= 50
+	left_bias	= 4
+	ena		= False
 
 	while True :
 		try :
@@ -130,11 +133,11 @@ if __name__ == "__main__" :
 
 #		if ba.is_pressed() :
 		if incoming == 'run':
-			ena	= hdr_ba( spd)
+			ena	= hdr_ba( spd, left_bias)
 
 #		elif bb.is_pressed() :	
 		elif incoming == 'back':
-			ena	= hdr_bb( spd)
+			ena	= hdr_bb( int( spd * 3 / 4))
 
 		else :
 			ena	= loop( ena)
