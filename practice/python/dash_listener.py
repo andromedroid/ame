@@ -6,6 +6,8 @@ need to :
   $	sudo apt install python-scapy
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import sys
 from scapy.all import *
 
