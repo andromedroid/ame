@@ -1,0 +1,23 @@
+(plmkeras) Mac:fine-tuning $ time python fine-tuning.py
+
+INFO:plaidml:Opening device "ati_radeon_hd_6630m.0"
+Found 1190 images belonging to 17 classes.
+Found  170 images belonging to 17 classes.
+Epoch 1/1
+
+INFO:plaidml:Analyzing Ops: 356 of 1807 operations complete
+INFO:plaidml:Analyzing Ops: 935 of 1807 operations complete
+INFO:plaidml:Analyzing Ops: 1401 of 1807 operations complete
+
+WARNING:plaidml:Reached scheduler optimization timeout
+
+48/49 [============================>.] - ETA: 9s - loss: 0.9745 - acc: 0.7188
+
+INFO:plaidml:Analyzing Ops: 271 of 840 operations complete
+INFO:plaidml:Analyzing Ops: 663 of 840 operations complete
+
+49/49 [==============================] - 525s - loss: 0.9633 - acc: 0.7211 - val_loss: 0.6089 - val_acc: 0.8393
+
+real	9m7.794s
+user	8m12.025s
+sys 	0m23.333s
