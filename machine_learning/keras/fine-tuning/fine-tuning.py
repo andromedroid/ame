@@ -20,13 +20,14 @@ import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
 #from keras.layers import Input, Activation, Dropout, Flatten, Dense
-#from keras.layers import Input, GlobalAveragePooling2D, Dense
-from keras.layers import Input, Flatten, Dense
+from keras.layers import Input, GlobalAveragePooling2D, Dense
+#from keras.layers import Input, Flatten, Dense
 #from keras.layers import Input, GlobalAveragePooling2D, Reshape, Dropout, Conv2D, Activation
 #from keras.applications.vgg16 import VGG16
-#from keras.applications.mobilenet import MobileNet
 #from keras.applications.inception_v3 import InceptionV3
-from keras.applications.resnet50 import ResNet50, preprocess_input
+#from keras.applications.resnet50 import ResNet50, preprocess_input
+from keras.applications.mobilenetv2 import MobileNetV2, preprocess_input
+#from keras.applications.nasnet import NASNetMobile, preprocess_input
 from keras import optimizers
 
 
@@ -39,10 +40,10 @@ batch_size	= 24
 nb_classes	= len( classes)
 
 #img_rows, img_cols	= 224, 224
-img_rows, img_cols	= 200, 200
+#img_rows, img_cols	= 200, 200
 #img_rows, img_cols	= 192, 192
 #img_rows, img_cols	= 160, 160
-#img_rows, img_cols	= 128, 128
+img_rows, img_cols	= 128, 128
 channels	= 3
 
 train_data_dir	= 'dataset/train_images'
@@ -74,9 +75,10 @@ if __name__ == '__main__' :
 	# create the base pre-trained model
 	input_tensor	= Input( shape = (img_rows, img_cols, 3))
 #	basenet			= VGG16(		include_top	= False,
-#	basenet			= MobileNet(	include_top	= False,
 #	basenet			= InceptionV3(	include_top	= False,
-	basenet			= ResNet50(		include_top	= False,
+#	basenet			= ResNet50(		include_top	= False,
+	basenet			= MobileNetV2(	include_top	= False,
+#	basenet			= NASNetMobile(	include_top	= False,
 									input_shape	= (img_rows, img_cols, 3),
 									weights		= 'imagenet' )
 
@@ -85,8 +87,8 @@ if __name__ == '__main__' :
 
 	# add a global spatial average pooling layer
 	x	= basenet.output
-	x	= Flatten( name = 'flatten')(x)
-#	x	= GlobalAveragePooling2D( name='avg_pool')(x)
+#	x	= Flatten( name = 'flatten')(x)
+	x	= GlobalAveragePooling2D( name = 'avg_pool')(x)
 	# let's add a fully-connected layer
 	# VGG16
 #	x	= Dense( 4096, activation = 'relu', name = 'fc1')(x)
@@ -116,9 +118,12 @@ if __name__ == '__main__' :
 
 	# first: train only the top layers (which were randomly initialized)
 #	ii	= 0
+#	for layer in model.layers :
 #	for layer in model.layers[:294] :	# InceptionV3
-	for layer in model.layers[:163] :
-#	for layer in model.layers[:153] :
+#	for layer in model.layers[:163] :	# ResNet50
+#	for layer in model.layers[:104] :	# MobileNetV2 : block_11_add
+	for layer in model.layers[:130] :	# MobileNetV2 : block_14_add
+#	for layer in model.layers[:339] :	# NASNetMobile : concatenate_3
 		layer.trainable	= False
 #		ii	= ii + 1
 #		print( ii, type( layer))
@@ -128,8 +133,10 @@ if __name__ == '__main__' :
 	# we need to recompile the model for these modifications to take effect.
 	# we use SGD with a low learning rate.
 	model.compile(	loss		= 'categorical_crossentropy',
-					optimizer	= optimizers.SGD(	#lr			= 1e-4,
-													lr			= 1e-2,
+					optimizer	= optimizers.SGD(	#lr			= 1e-4,		# default
+													#lr			= 1e-2,		# for ResNet50
+													lr			= 0.045,	# for MobileNet
+													#lr			= 0.1,		# for NASNetMobile
 													momentum	= 0.9 ),
 					metrics		= ['accuracy'])
 

@@ -12,6 +12,7 @@ alias ll='ls -lhF'
 alias la='ls -AF'
 alias lla='ls -AlhF'
 alias lo='ls -AlF'
+alias less='less -x4'
 alias wget='curl -OL'
 alias emn='emacs -nw'
 
