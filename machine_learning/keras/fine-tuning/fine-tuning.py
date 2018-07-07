@@ -26,7 +26,8 @@ from keras.layers import Input, GlobalAveragePooling2D, Dense
 #from keras.applications.vgg16 import VGG16
 #from keras.applications.inception_v3 import InceptionV3
 #from keras.applications.resnet50 import ResNet50, preprocess_input
-from keras.applications.mobilenetv2 import MobileNetV2, preprocess_input
+from keras.applications.xception import Xception, preprocess_input
+#from keras.applications.mobilenetv2 import MobileNetV2, preprocess_input
 #from keras.applications.nasnet import NASNetMobile, preprocess_input
 from keras import optimizers
 
@@ -77,7 +78,8 @@ if __name__ == '__main__' :
 #	basenet			= VGG16(		include_top	= False,
 #	basenet			= InceptionV3(	include_top	= False,
 #	basenet			= ResNet50(		include_top	= False,
-	basenet			= MobileNetV2(	include_top	= False,
+	basenet			= Xception(		include_top	= False,
+#	basenet			= MobileNetV2(	include_top	= False,
 #	basenet			= NASNetMobile(	include_top	= False,
 									input_shape	= (img_rows, img_cols, 3),
 									weights		= 'imagenet' )
@@ -122,10 +124,13 @@ if __name__ == '__main__' :
 #	for layer in model.layers :
 #	for layer in model.layers[:294] :	# [313]	InceptionV3		: average_pooling2d_9
 #	for layer in model.layers[:163] :	# [176]	ResNet50		: activation_46
+	for layer in model.layers[:106] :	# [134]	Xception		: add_10
+#	for layer in model.layers[:116] :	# [134]	Xception		: add_11
+#	for layer in model.layers[:126] :	# [134]	Xception		: add_12
 #	for layer in model.layers[:104] :	# [152]	MobileNetV2		: block_11_add
 #	for layer in model.layers[:113] :	# [152]	MobileNetV2		: block_12_add
 #	for layer in model.layers[:119] :	# [152]	MobileNetV2		: block_13_depthwise_relu
-	for layer in model.layers[:121] :	# [152]	MobileNetV2		: block_13_project_BN
+#	for layer in model.layers[:121] :	# [152]	MobileNetV2		: block_13_project_BN
 #	for layer in model.layers[:130] :	# [152]	MobileNetV2		: block_14_add
 #	for layer in model.layers[:339] :	# [751]	NASNetMobile	: concatenate_3
 #	for layer in model.layers[:571] :	# [751]	NASNetMobile	: concatenate_4
@@ -142,7 +147,7 @@ if __name__ == '__main__' :
 	model.compile(	loss		= 'categorical_crossentropy',
 					optimizer	= optimizers.SGD(	#lr			= 1e-4,		# default
 													#lr			= 1e-2,		# for ResNet50
-													lr			= 0.045,	# for MobileNet
+													lr			= 0.045,	# for MobileNet, Xception
 													#lr			= 0.1,		# for NASNetMobile
 													momentum	= 0.9 ),
 					metrics		= ['accuracy'])
