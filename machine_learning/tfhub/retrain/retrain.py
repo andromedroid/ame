@@ -134,7 +134,8 @@ FLAGS = None
 MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1	# ~134M
 
 # The location where variable checkpoints will be stored.
-CHECKPOINT_NAME	= '/tmp/_retrain_checkpoint'
+SAVE_DIR		= '_save/'
+CHECKPOINT_NAME	= SAVE_DIR + '_retrain_checkpoint'
 
 # A module is understood as instrumented for quantization with TF-Lite
 # if it contains any of these ops.
@@ -190,10 +191,10 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
 			tf.logging.warning('No files found')
 			continue
 
-		if len(file_list) < 20:
+		if len( file_list) < 20:
 			tf.logging.warning(
 				'WARNING: Folder has less than 20 images, which may cause issues.')
-		elif len(file_list) > MAX_NUM_IMAGES_PER_CLASS:
+		elif len( file_list) > MAX_NUM_IMAGES_PER_CLASS:
 			tf.logging.warning(
 				'WARNING: Folder {} has more than {} images. Some images will '
 				'never be selected.'.format(dir_name, MAX_NUM_IMAGES_PER_CLASS))
@@ -830,7 +831,7 @@ def add_final_retrain_ops(class_count, final_tensor_name, bottleneck_tensor,
 	tf.summary.scalar('cross_entropy', cross_entropy_mean)
 
 	with tf.name_scope('train'):
-		optimizer	= tf.train.GradientDescentOptimizer( FLAGS.learning_rate)
+		optimizer	= tf.train.GradientDescentOptimizer( 1e-4 * FLAGS.learning_rate)
 		train_step	= optimizer.minimize( cross_entropy_mean)
 
 	return (train_step, cross_entropy_mean, bottleneck_input,
@@ -893,8 +894,8 @@ def run_final_eval(	train_session, module_spec, class_count, image_lists,
 			bottleneck_input	: test_bottlenecks,
 			ground_truth_input	: test_ground_truth } )
 
-	tf.logging.info('Final test accuracy = %.1f%% (N=%d)' %
-					(test_accuracy * 100, len(test_bottlenecks)))
+	tf.logging.warn('Final test accuracy = %.2f %% (N =%5d)' %
+					(test_accuracy * 100, len( test_bottlenecks)))
 
 	if FLAGS.print_misclassified_test_images:
 		tf.logging.info('=== MISCLASSIFIED TEST IMAGES ===')
@@ -1031,7 +1032,8 @@ def export_model( module_spec, class_count, saved_model_dir):
 def main(_):
 	# Needed to make sure the logging output is visible.
 	# See https://github.com/tensorflow/tensorflow/issues/3047
-	tf.logging.set_verbosity(tf.logging.INFO)
+#	tf.logging.set_verbosity( tf.logging.INFO)
+	tf.logging.set_verbosity( tf.logging.WARN)
 
 	if not FLAGS.image_dir:
 		tf.logging.error('Must set flag --image_dir.')
@@ -1043,7 +1045,7 @@ def main(_):
 	# Look at the folder structure, and create lists of all the images.
 	image_lists = create_image_lists(	FLAGS.image_dir, FLAGS.testing_percentage,
 										FLAGS.validation_percentage )
-	class_count = len(image_lists.keys())
+	class_count = len( image_lists.keys())
 	if class_count == 0:
 		tf.logging.error('No valid folders of images found at ' + FLAGS.image_dir)
 		return -1
@@ -1135,10 +1137,12 @@ def main(_):
 					[evaluation_step, cross_entropy],
 					feed_dict	= {	bottleneck_input	: train_bottlenecks,
 									 ground_truth_input	: train_ground_truth } )
+				'''
 				tf.logging.info('%s: Step %d: Train accuracy = %.1f%%' %
 								(datetime.now(), i, train_accuracy * 100))
 				tf.logging.info('%s: Step %d: Cross entropy = %f' %
 								(datetime.now(), i, cross_entropy_value))
+				'''
 				# TODO: Make this use an eval graph, to avoid quantization
 				# moving averages being updated by the validation set, though in
 				# practice this makes a negligable difference.
@@ -1155,9 +1159,15 @@ def main(_):
 					feed_dict	= {	bottleneck_input	: validation_bottlenecks,
 									ground_truth_input	: validation_ground_truth } )
 				validation_writer.add_summary( validation_summary, i)
+				'''
 				tf.logging.info('%s: Step %d: Validation accuracy = %.1f%% (N=%d)' %
 								(datetime.now(), i, validation_accuracy * 100,
-								 len(validation_bottlenecks) ) )
+								 len( validation_bottlenecks) ) )
+				'''
+				tf.logging.warn('%s: Step%5d: acc.: %.2f %%, X.ent: %f, val_acc.: %.2f %% (N =%4d)' %
+								(datetime.now(), i, train_accuracy * 100,
+								 cross_entropy_value, validation_accuracy * 100,
+								 len( validation_bottlenecks) ) )
 
 			# Store intermediate results
 			intermediate_frequency = FLAGS.intermediate_store_frequency
@@ -1197,7 +1207,9 @@ def main(_):
 
 
 if __name__ == '__main__':
+
 	parser = argparse.ArgumentParser()
+
 	parser.add_argument(
 		'--image_dir',
 		type=str,
@@ -1207,13 +1219,13 @@ if __name__ == '__main__':
 	parser.add_argument(
 		'--output_graph',
 		type=str,
-		default='/tmp/output_graph.pb',
+		default	= SAVE_DIR + 'output_graph.pb',
 		help='Where to save the trained graph.'
 	)
 	parser.add_argument(
 		'--intermediate_output_graphs_dir',
 		type=str,
-		default='/tmp/intermediate_graph/',
+		default	= SAVE_DIR + 'intermediate_graph/',
 		help='Where to save the intermediate graphs.'
 	)
 	parser.add_argument(
@@ -1227,13 +1239,13 @@ if __name__ == '__main__':
 	parser.add_argument(
 		'--output_labels',
 		type=str,
-		default='/tmp/output_labels.txt',
+		default	= SAVE_DIR + 'output_labels.txt',
 		help='Where to save the trained graph\'s labels.'
 	)
 	parser.add_argument(
 		'--summaries_dir',
 		type=str,
-		default='/tmp/retrain_logs',
+		default	= SAVE_DIR + 'retrain_logs',
 		help='Where to save summary logs for TensorBoard.'
 	)
 	parser.add_argument(
@@ -1244,8 +1256,8 @@ if __name__ == '__main__':
 	)
 	parser.add_argument(
 		'--learning_rate',
-		type=float,
-		default=0.01,
+		type=int,
+		default=100,
 		help='How large a learning rate to use when training.'
 	)
 	parser.add_argument(
@@ -1307,7 +1319,7 @@ if __name__ == '__main__':
 	parser.add_argument(
 		'--bottleneck_dir',
 		type=str,
-		default='/tmp/bottleneck',
+		default	= SAVE_DIR + 'bottleneck',
 		help='Path to cache bottleneck layer values as files.'
 	)
 	parser.add_argument(
@@ -1373,4 +1385,4 @@ if __name__ == '__main__':
 
 	FLAGS, unparsed	= parser.parse_known_args()
 
-	tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+	tf.app.run( main = main, argv = [sys.argv[0]] + unparsed)
