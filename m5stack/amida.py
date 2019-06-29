@@ -8,6 +8,9 @@ from m5stack import *
 from m5ui import *
 from uiflow import *
 
+#from m5mqtt import M5mqtt
+import random
+
 
 BLACK	= 0x000000
 RED		= 0xFF0000
@@ -91,7 +94,7 @@ class Amida :
 			if self.lines_rect[ii] is not None :
 				self.lines_rect[ii].setBorderColor( WHITE)
 
-	def	start( self, post, shield) :
+	def	start( self, post) :
 		'''
 		fix start position
 		int( post)	: 0 ~ 2
@@ -114,10 +117,7 @@ class Amida :
 
 		self.bullet.setBgColor( BLACK)
 
-		if post == shield :
-			return	True
-
-		return	False
+		return	post
 
 
 def	RGB( color, step = 2) :
@@ -134,15 +134,20 @@ def	RGB( color, step = 2) :
 #rgb.setColorAll( COLOR)
 
 
-def	judge( guard) :
+shield	= -1
 
-	if guard :
+def	judge( post) :
+
+	global	shield
+
+	if post == shield :
 #		label1	= M5TextBox( 200, 200, "Guard !", lcd.FONT_Default, WHITE, rotate = 0)
 		label1.setText( str( "Guard !"))
 
 		RGB( COLOR, 1)
 
 	else :
+		speaker.sing( 110, 0.5)
 #		label1	= M5TextBox( 200, 200, "BOMB !", lcd.FONT_Default, WHITE, rotate = 0)
 		label1.setText( str( "BOMB !"))
 
@@ -158,6 +163,9 @@ is_end	= False
 
 def	main() :
 
+	global	shield
+	global	is_end
+
 	setScreenColor( BLACK)
 
 	buttonA	= M5Button( name = "ButtonA", text = "ButtonA", visibility = True)
@@ -169,13 +177,13 @@ def	main() :
 	post2	= M5Rect(164, 10, 1, 200, WHITE, WHITE)
 	post3	= M5Rect(264, 10, 1, 200, WHITE, WHITE)
 
-	global	is_end
+	shield	= -1
 	is_end	= False
 
 
 post	= 0													# for debug.
 
-def	btn_common( post, shield) :
+def	btn_common( post) :
 
 	label1.hide()
 
@@ -187,7 +195,7 @@ def	btn_common( post, shield) :
 	label1.hide()
 	wait_ms( 100)
 
-	guard	= amida.ready()
+	amida.ready()
 
 	label1.setText( str( "World"))
 	wait_ms( 900)
@@ -195,52 +203,74 @@ def	btn_common( post, shield) :
 	label1.hide()
 	wait_ms( 100)
 
-	guard	= amida.start( post, shield)
-	judge( guard)
+	post	= amida.start( post)
+
+	judge( post)
 
 	amida	= None
 
 	global	is_end
 	is_end	= True
 
+
+#m5mqtt	= M5mqtt( '', '192.168.0.255', 1883, '', '', 300)
+
+def fun_missile_( topic_data) :
+
+	post	= int( topic_data)
+	print( 'missile', post)
+
+	if is_end :
+		main()
+
+	btn_common( post)
+
+#m5mqtt.subscribe( 'missile', fun_missile_)
+
 def	btnA_pressed() :
 #def	btnA_released() :
 
+	global	shield
+
 	if is_end :
 		main()
 	else :
-		btn_common( post, 0)
-
-#	label1.setText( str( "0"))
+		shield	= 0
+		label1.setText( str( "A"))
 
 def	btnB_pressed() :
 
+	global	shield
+
 	if is_end :
 		main()
 	else :
-		btn_common( post, 1)
-
-#	label1.setText( str( "1"))
+		shield	= 1
+		label1.setText( str( "B"))
 
 def	btnC_pressed() :
 
+	global	shield
+
 	if is_end :
 		main()
 	else :
-		btn_common( post, 2)
-
-#	label1.setText( str( "2"))
+		shield	= 2
+		label1.setText( str( "C"))
 
 btnA.wasPressed( callback = btnA_pressed)
 #btnA.wasReleased( callback = btnA_released)
 btnB.wasPressed( callback = btnB_pressed)
 btnC.wasPressed( callback = btnC_pressed)
 
+main()
+
+'''
+m5mqtt.start()
 '''
 while True :
-	main()
-'''
-main()
+	fun_missile_( random.randint( 0, 2))
+	wait_ms( 3000)
 #'''
 
 '''
