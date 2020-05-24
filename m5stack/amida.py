@@ -2,8 +2,6 @@
 based on uiflow-firmware v1.3.2
 """
 
-import random
-
 from m5stack import *
 from m5ui import *
 from uiflow import *
@@ -30,6 +28,8 @@ class Amida :
 
 	def	__init__( self) :
 
+		self.lines_rect	= [None] * 10
+
 		for ii in range( len( self.lines)) :
 #			self.lines[ii]		= ii % 2 + 1												# for debug.
 			self.lines[ii]		= random.randint( 0, 2)
@@ -43,6 +43,7 @@ class Amida :
 
 		for ii in range( 0, move, step) :
 			obj.setPosition( xpos, ypos + ii)
+#			wait_ms( 5)
 
 		return	ypos + move
 
@@ -50,6 +51,7 @@ class Amida :
 
 		for ii in range( 0, move, step) :
 			obj.setPosition( xpos + ii, ypos)
+#			wait_ms( 5)
 
 		return	xpos + move
 
@@ -90,9 +92,9 @@ class Amida :
 
 	def	ready( self) :
 
-		for ii in range( len( self.lines)) :
-			if self.lines_rect[ii] is not None :
-				self.lines_rect[ii].setBorderColor( WHITE)
+		for line in self.lines_rect :
+			if line is not None :
+				line.setBorderColor( WHITE)
 
 	def	start( self, post) :
 		'''
@@ -190,6 +192,7 @@ def	btn_common( post) :
 	amida	= Amida()
 
 	label1.setText( str( "Hello"))
+#	label1.setText( str( amida.lines))
 	wait_ms( 900)
 
 	label1.hide()
